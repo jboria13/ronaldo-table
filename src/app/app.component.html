@@ -1,4 +1,4 @@
-  <table>
+ <table>
     <thead>
       <tr>
         <th>Season</th>
@@ -30,33 +30,33 @@
             <td>
               <span>{{output.competition}}</span>
             </td>
-            <td>
+            <td class="stats">
               <span>{{output.games}}</span>
             </td>
-            <td>
+            <td class="stats">
               <span>{{output.minutes}}</span>
             </td>
-            <td>
+            <td class="stats">
               <span>{{output.goals}}</span>
             </td>
-            <td>
+            <td class="stats">
               <span>{{output.assists}}</span>
             </td>
-            <td>
-              <span>{{output.goalsPerNinety | number : '1.2-2'}}</span>
+            <td class="stats">
+              {{output.goalsPerNinety | number : '1.2-2'}}
             </td>
         </tr>
         <tr>
-          <td>{{uniqueSeasonsArray.length}} Season</td>
-          <td></td>
-          <td>{{uniqueClubsArray.length}} Clubs</td>
-          <td></td>
-          <td>{{uniqueCompetitionsArray.length}} Competition</td>
-          <td>{{totalGames}}</td>
-          <td>{{totalMinutes | number}}</td>
-          <td>{{totalGoals}}</td>
-          <td>{{totalAssists}}</td>
-          <td>{{totalGoalsPerNinety | number : '1.2-2'}}</td>
+          <td class="totals">{{uniqueSeasonsArray.length}} Season</td>
+          <td class="totals"></td>
+          <td class="totals">{{uniqueClubsArray.length}} Clubs</td>
+          <td class="totals"></td>
+          <td class="totals">{{uniqueCompetitionsArray.length}} Competition</td>
+          <td class="totals stats">{{totalGames}}</td>
+          <td class="totals stats">{{totalMinutes | number}}</td>
+          <td class="totals stats">{{totalGoals}}</td>
+          <td class="totals stats">{{totalAssists}}</td>
+          <td class="totals stats">{{totalGoalsPerNinety | number : '1.2-2'}}</td>
         </tr>
     </tbody>
   </table>

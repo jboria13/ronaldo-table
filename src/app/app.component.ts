@@ -20,9 +20,9 @@ export class AppComponent {
   public peopleArray               : People[]               = [];
   public statsArray                : Stats[]                = [];
   public teamsArray                : Teams[]                = [];
-  public uniqueSeasonsArray        : any[]                  = [];
-  public uniqueClubsArray          : any[]                  = [];
-  public uniqueCompetitionsArray   : any[]                  = [];
+  public uniqueSeasonsArray        : String[]               = [];
+  public uniqueClubsArray          : String[]               = [];
+  public uniqueCompetitionsArray   : String[]               = [];
   public totalGames                : number                 = 0;
   public totalMinutes              : number                 = 0;
   public totalGoals                : number                 = 0;
@@ -75,7 +75,6 @@ export class AppComponent {
 
       }
     );
-    
   }
 
   ronaldoDomesticTableArrayBuilder(competitionsArray: Competitions[], peopleArray: People[], statsArray: Stats[], teamsArray: Teams[]): RonaldoDomesticTable[] {
@@ -95,7 +94,7 @@ export class AppComponent {
                 
                 this.ronaldoDomesticTableArray.push(new RonaldoDomesticTable(setOfStats.season, this.calculateAge(setOfStats.season as string, ronaldo?.birthDate as string), 
                                                                               setofTeams.name, setofTeams.country, setofCompetitions.name, setOfStats.games, setOfStats.minutes, 
-                                                                              setOfStats.goals, setOfStats.assists, this.calculateGoalsPerNinety(setOfStats.minutes, setOfStats.goals)));
+                                                                              setOfStats.goals, setOfStats.assists, this.calculateGoalsPerNinetyMinutes(setOfStats.minutes, setOfStats.goals)));
                               
               }
             })
@@ -106,42 +105,51 @@ export class AppComponent {
 
     this.ronaldoDomesticTableArray.sort(function(rowA,rowB){return parseInt(rowA.season.slice(0, 4)) - parseInt(rowB.season.slice(0, 4))});
     this.getUniqueTotalCounts();
-    this.getTotalStat();
+    this.getTotalStats();
 
     return this.ronaldoDomesticTableArray;
   }
   
   private getUniqueTotalCounts() {
     this.ronaldoDomesticTableArray.forEach(row => {
+
       if (!this.uniqueSeasonsArray.includes(row.season)) {
         this.uniqueSeasonsArray.push(row.season);
       }
+      
       if (!this.uniqueClubsArray.includes(row.team)) {
         this.uniqueClubsArray.push(row.team);
       }
+      
       if (!this.uniqueCompetitionsArray.includes(row.competition)) {
         this.uniqueCompetitionsArray.push(row.competition);
       }
+
     });
   }
 
-  private getTotalStat() {
+  private getTotalStats() {
     this.ronaldoDomesticTableArray.forEach(row => {
+      
       if (row.games) {
         this.totalGames = row.games + this.totalGames;
       }
+      
       if (row.minutes) {
         this.totalMinutes = row.minutes + this.totalMinutes;
       }
+      
       if (row.goals) {
         this.totalGoals = row.goals + this.totalGoals;
       }
+      
       if (row.assists) {
         this.totalAssists = row.assists + this.totalAssists;
       }
-    })
 
-    this.totalGoalsPerNinety = this.calculateGoalsPerNinety(this.totalMinutes, this.totalGoals);
+    });
+
+    this.totalGoalsPerNinety = this.calculateGoalsPerNinetyMinutes(this.totalMinutes, this.totalGoals);
   }
 
   private calculateAge(season: string, birthDate: string): number {
@@ -150,7 +158,7 @@ export class AppComponent {
     return parseInt(seasonYear) - parseInt(birthYear);
   }
 
-  private calculateGoalsPerNinety(minutes: number, goals: number): number {
+  private calculateGoalsPerNinetyMinutes(minutes: number, goals: number): number {
     return goals / minutes * 90;
   }
 }

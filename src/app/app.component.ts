@@ -152,18 +152,14 @@ export class AppComponent {
     this.totalGoalsPerNinety = this.calculateGoalsPerNinetyMinutes(this.totalMinutes, this.totalGoals);
   }
 
-  private calculateAge(season: string, birthDate: string): number {
-    const seasonYear = season.slice(0, 4);
-    const birthYear = birthDate.slice(0, 4);
-    return parseInt(seasonYear) - parseInt(birthYear);
+  private calculateAge(season: string, birthDateString: string): number {
+    const seasonStartDate = new Date(season.slice(0, 4) + "/08/01").getTime();
+    const birthDate = new Date(birthDateString).getTime();
+
+    return Math.floor((seasonStartDate - birthDate) / (365 * 24 * 60 * 60 * 1000));
   }
 
   private calculateGoalsPerNinetyMinutes(minutes: number, goals: number): number {
     return goals / minutes * 90;
   }
 }
-
-
-
-
-

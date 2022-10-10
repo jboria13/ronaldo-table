@@ -23,8 +23,4 @@ export class RonaldoDomesticTable {
       this.goalsPerNinety = goalsPerNinety;
     }
 
-    setAge(age: number) {
-        this.age = age;
-    }
-
   }

@@ -75,19 +75,19 @@ export class AppComponent {
           }
         }
 
-        this.domesticTableArrayBuilder(this.competitions, this.people, this.statsArray,this.teams);
+        this.domesticTableArrayBuilder(this.competitions, this.people, this.statsArray,this.teams, this.CRISTIANO_RONALDO);
 
       }
     );
   }
 
-  domesticTableArrayBuilder(competitions: {[key: string]: Competition}, player: {[key: string]: People}, statsArray: Stats[], teams: {[key: string]: Team}): tableOfStats[] {
+  domesticTableArrayBuilder(competitionDetails: {[key: string]: Competition}, playerDetails: {[key: string]: People}, statsArray: Stats[], teamDetails: {[key: string]: Team}, player: string): tableOfStats[] {
     
     statsArray.forEach(stats => {
-      if (stats.personId === this.getPlayerId(player, this.CRISTIANO_RONALDO) && this.isDomestic(this.competitions, stats.compId) && this.isLeague(this.competitions, stats.compId)) {
-        this.domesticTableArray.push(new tableOfStats(stats.season, this.calculateAge(stats.season as string, this.getPlayerBirthDate(player, this.CRISTIANO_RONALDO) as string), 
-                                       this.getDomesticTeamName(teams, stats.teamId, stats.compId), this.getDomesticTeamCountry(teams, stats.teamId, stats.compId), 
-                                       this.getCompetitionName(competitions, stats.compId, this.getCompetitionScope(competitions, stats.compId) as string, this.getCompetitionFormat(competitions, stats.compId) as string), 
+      if (stats.personId === this.getPlayerId(playerDetails, player) && this.isDomestic(this.competitions, stats.compId) && this.isLeague(this.competitions, stats.compId)) {
+        this.domesticTableArray.push(new tableOfStats(stats.season, this.calculateAge(stats.season as string, this.getPlayerBirthDate(playerDetails, player) as string), 
+                                       this.getDomesticTeamName(teamDetails, stats.teamId, stats.compId), this.getDomesticTeamCountry(teamDetails, stats.teamId, stats.compId), 
+                                       this.getCompetitionName(competitionDetails, stats.compId, this.getCompetitionScope(competitionDetails, stats.compId) as string, this.getCompetitionFormat(competitionDetails, stats.compId) as string), 
                                        stats.games, stats.minutes, stats.goals, stats.assists, this.calculateGoalsPerNinetyMinutes(stats.minutes, stats.goals)));
       }
     });

@@ -1,4 +1,4 @@
-export class Teams {
+export class Team {
     teamId:   String;
     name:     String;
     country:  String;

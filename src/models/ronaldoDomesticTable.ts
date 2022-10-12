@@ -1,4 +1,4 @@
-export class RonaldoDomesticTable {
+export class tableOfStats {
     season:         String;
     age:            number;
     team:           String;

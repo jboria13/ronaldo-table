@@ -1,4 +1,4 @@
-export class Competitions {
+export class Competition {
     compId:            String;
     name:              String;
     teamType:          String;

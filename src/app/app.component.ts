@@ -21,14 +21,14 @@ export class AppComponent {
   public people                  : {[key: string]: People}      = {};
   public teams                   : {[key: string]: Team}        = {};
   public statsArray              : Stats[]                      = [];
-  public uniqueSeasonsArray      : String[]                     = [];
-  public uniqueClubsArray        : String[]                     = [];
-  public uniqueCompetitionsArray : String[]                     = [];
   public totalGames              : number                       = 0;
   public totalMinutes            : number                       = 0;
   public totalGoals              : number                       = 0;
   public totalAssists            : number                       = 0;
   public totalGoalsPerNinety     : number                       = 0;
+  public uniqueSeasons                                          = new Set();
+  public uniqueClubs                                            = new Set();
+  public uniqueCompetitions                                     = new Set();
 
   CRISTIANO_RONALDO = "Cristiano Ronaldo";
   DOMESTIC          = "domestic";
@@ -75,7 +75,7 @@ export class AppComponent {
 
           for (let index = 1; index < teamsRows.length - 1; index++) {
             let teamsRow = teamsRows[index].split(",");
-            
+
             this.teams[teamsRow[0]] = new Team(teamsRow[0], teamsRow[1].replace(/['"]+/g, ''), teamsRow[2], teamsRow[3]); 
           }
         }
@@ -134,41 +134,18 @@ export class AppComponent {
   
   private getUniqueTotalCounts() {
     this.domesticTableArray.forEach(row => {
-
-      if (!this.uniqueSeasonsArray.includes(row.season)) {
-        this.uniqueSeasonsArray.push(row.season);
-      }
-      
-      if (!this.uniqueClubsArray.includes(row.team)) {
-        this.uniqueClubsArray.push(row.team);
-      }
-      
-      if (!this.uniqueCompetitionsArray.includes(row.competition)) {
-        this.uniqueCompetitionsArray.push(row.competition);
-      }
-
+      this.uniqueSeasons.add(row.season);
+      this.uniqueClubs.add(row.team);
+      this.uniqueCompetitions.add(row.competition);
     });
   }
 
   private getTotalStats() {
     this.domesticTableArray.forEach(row => {
-      
-      if (row.games) {
         this.totalGames = row.games + this.totalGames;
-      }
-      
-      if (row.minutes) {
         this.totalMinutes = row.minutes + this.totalMinutes;
-      }
-      
-      if (row.goals) {
         this.totalGoals = row.goals + this.totalGoals;
-      }
-      
-      if (row.assists) {
         this.totalAssists = row.assists + this.totalAssists;
-      }
-
     });
 
     this.totalGoalsPerNinety = this.calculateGoalsPerNinetyMinutes(this.totalMinutes, this.totalGoals);

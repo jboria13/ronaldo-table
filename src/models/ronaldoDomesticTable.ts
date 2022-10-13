@@ -1,16 +1,16 @@
 export class tableOfStats {
-    season:         String;
+    season:         string;
     age:            number;
-    team:           String;
-    country:        String;
-    competition:    String;
+    team:           string;
+    country:        string;
+    competition:    string;
     games:          number;
     minutes:        number;
     goals:          number;
     assists:        number;
     goalsPerNinety: number;
   
-    constructor(season: String, age: number, team: String, country: String, competition: String, games: number, minutes: number, goals: number, assists: number, goalsPerNinety: number) {
+    constructor(season: string, age: number, team: string, country: string, competition: string, games: number, minutes: number, goals: number, assists: number, goalsPerNinety: number) {
       this.season         = season;
       this.age            = age;
       this.team           = team;

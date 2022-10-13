@@ -1,10 +1,10 @@
 export class Team {
-    teamId:   String;
-    name:     String;
-    country:  String;
-    teamType: String
+    teamId:   string;
+    name:     string;
+    country:  string;
+    teamType: string
   
-    constructor(teamId: String, name: String, country: String, teamType: String) {
+    constructor(teamId: string, name: string, country: string, teamType: string) {
       this.teamId   = teamId;
       this.name     = name;
       this.country  = country;

@@ -88,10 +88,10 @@ export class AppComponent {
   domesticTableArrayBuilder(player: string): tableOfStats[] {
     
     this.statsArray.forEach(stats => {
-      if (stats.personId === this.getPlayerId(player) && this.isScopeDomestic(stats.compId as string) && this.isCompetitionFormatLeague(stats.compId as string)) {
-        this.domesticTableArray.push(new tableOfStats(stats.season, this.calculateAge(stats.season as string, this.getPlayerBirthDate(player) as string), 
-                                       this.getDomesticTeamName(stats.teamId as string), this.getDomesticTeamCountry(stats.teamId as string), 
-                                       this.getCompetitionName(stats.compId as string), 
+      if (stats.personId === this.getPlayerId(player) && this.isScopeDomestic(stats.compId) && this.isCompetitionFormatLeague(stats.compId)) {
+        this.domesticTableArray.push(new tableOfStats(stats.season, this.calculateAge(stats.season, this.getPlayerBirthDate(stats.personId)), 
+                                       this.getDomesticTeamName(stats.teamId), this.getDomesticTeamCountry(stats.teamId), 
+                                       this.getCompetitionName(stats.compId), 
                                        stats.games, stats.minutes, stats.goals, stats.assists, this.calculateGoalsPerNinetyMinutes(stats.minutes, stats.goals)));
       }
     });
@@ -103,24 +103,25 @@ export class AppComponent {
     return this.domesticTableArray;
   }
 
-  private getPlayerId(playerName: string): String {
-    return Object.values(this.people).find(player => player.name === playerName)?.personId!;
+  private getPlayerId(playerName: string): string {
+    return Object.values(this.people).find(player => player.name === playerName)?.personId! ?? "";
   }
 
-  private getPlayerBirthDate(playerName: string): String {
-    return Object.values(this.people).find(player => player.name === playerName)?.birthDate!;
+  private getPlayerBirthDate(personId: string): string {
+    return this.people[personId]?.birthDate ?? "";
   }
 
-  private getCompetitionName(compId: string): String {
-    return this.competitions[compId]?.name;
+  private getCompetitionName(compId: string): string {
+    return this.competitions[compId]?.name ?? "";
   }
 
-  private getDomesticTeamName(teamId: string): String {
-    return this.teams[teamId]?.name;
+  private getDomesticTeamName(teamId: string): string {
+    return this.teams[teamId]?.name ?? "";
   }
 
-  private getDomesticTeamCountry(teamId: string): String {
-    return this.teams[teamId]?.country;
+  private getDomesticTeamCountry(teamId: string): string {
+    console.log(this.teams[4]?.country)
+    return this.teams[4]?.country ?? "";
   }
 
   private isScopeDomestic(compId: string): boolean {

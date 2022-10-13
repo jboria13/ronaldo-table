@@ -1,9 +1,9 @@
 export class People {
-    personId:  String;
-    name:      String;
-    birthDate: String;
+    personId:  string;
+    name:      string;
+    birthDate: string;
   
-    constructor(personId: String, name: String, birthDate: String) {
+    constructor(personId: string, name: string, birthDate: string) {
       this.personId  = personId;
       this.name      = name;
       this.birthDate = birthDate;

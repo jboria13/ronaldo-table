@@ -120,8 +120,7 @@ export class AppComponent {
   }
 
   private getDomesticTeamCountry(teamId: string): string {
-    console.log(this.teams[4]?.country)
-    return this.teams[4]?.country ?? "";
+    return this.teams[teamId]?.country ?? "";
   }
 
   private isScopeDomestic(compId: string): boolean {

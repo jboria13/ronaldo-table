@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { stringify } from 'querystring';
 import { Competition } from 'src/models/competitions';
 import { People } from 'src/models/people';
 import { tableOfStats } from 'src/models/ronaldoDomesticTable';

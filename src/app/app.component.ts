@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { stringify } from 'querystring';
 import { Competition } from 'src/models/competitions';
 import { People } from 'src/models/people';
 import { tableOfStats } from 'src/models/ronaldoDomesticTable';
@@ -43,6 +44,7 @@ export class AppComponent {
 
           for (let index = 1; index < competitionsRows.length - 1; index++) {
             let competitionRow = competitionsRows[index].split(",");
+
             this.competitions[competitionRow[0]] = new Competition(competitionRow[0], competitionRow[1].replace(/['"]+/g, ''), competitionRow[2],
               competitionRow[3], competitionRow[4], competitionRow[5]);
           }
@@ -53,6 +55,7 @@ export class AppComponent {
 
           for (let index = 1; index < peopleRows.length - 1; index++) {
             let peopleRow = peopleRows[index].split(",");
+
             this.people[peopleRow[0]] = new People(peopleRow[0], peopleRow[1].replace(/['"]+/g, ''), peopleRow[2]);
           }
         }
@@ -62,6 +65,7 @@ export class AppComponent {
 
           for (let index = 1; index < statsRows.length - 1; index++) {
             let statRow = statsRows[index].split(",");
+
             this.statsArray.push(new Stats(statRow[0], statRow[1], statRow[2], statRow[3], parseInt(statRow[4]), parseInt(statRow[5]), parseInt(statRow[6]), parseInt(statRow[7])));
           }
         }
@@ -71,23 +75,24 @@ export class AppComponent {
 
           for (let index = 1; index < teamsRows.length - 1; index++) {
             let teamsRow = teamsRows[index].split(",");
+            
             this.teams[teamsRow[0]] = new Team(teamsRow[0], teamsRow[1].replace(/['"]+/g, ''), teamsRow[2], teamsRow[3]); 
           }
         }
 
-        this.domesticTableArrayBuilder(this.competitions, this.people, this.statsArray,this.teams, this.CRISTIANO_RONALDO);
+        this.domesticTableArrayBuilder(this.CRISTIANO_RONALDO);
 
       }
     );
   }
 
-  domesticTableArrayBuilder(competitionDetails: {[key: string]: Competition}, playerDetails: {[key: string]: People}, statsArray: Stats[], teamDetails: {[key: string]: Team}, player: string): tableOfStats[] {
+  domesticTableArrayBuilder(player: string): tableOfStats[] {
     
-    statsArray.forEach(stats => {
-      if (stats.personId === this.getPlayerId(playerDetails, player) && this.isDomestic(this.competitions, stats.compId) && this.isLeague(this.competitions, stats.compId)) {
-        this.domesticTableArray.push(new tableOfStats(stats.season, this.calculateAge(stats.season as string, this.getPlayerBirthDate(playerDetails, player) as string), 
-                                       this.getDomesticTeamName(teamDetails, stats.teamId, stats.compId), this.getDomesticTeamCountry(teamDetails, stats.teamId, stats.compId), 
-                                       this.getCompetitionName(competitionDetails, stats.compId, this.getCompetitionScope(competitionDetails, stats.compId) as string, this.getCompetitionFormat(competitionDetails, stats.compId) as string), 
+    this.statsArray.forEach(stats => {
+      if (stats.personId === this.getPlayerId(player) && this.isScopeDomestic(stats.compId as string) && this.isCompetitionFormatLeague(stats.compId as string)) {
+        this.domesticTableArray.push(new tableOfStats(stats.season, this.calculateAge(stats.season as string, this.getPlayerBirthDate(player) as string), 
+                                       this.getDomesticTeamName(stats.teamId as string), this.getDomesticTeamCountry(stats.teamId as string), 
+                                       this.getCompetitionName(stats.compId as string), 
                                        stats.games, stats.minutes, stats.goals, stats.assists, this.calculateGoalsPerNinetyMinutes(stats.minutes, stats.goals)));
       }
     });
@@ -99,40 +104,32 @@ export class AppComponent {
     return this.domesticTableArray;
   }
 
-  private getPlayerId(playerDetails: {[key: string]: People}, playerName: string): String {
-    return Object.entries(playerDetails).find(([key, value]) => key != null && value.name === playerName)?.[1].personId!;
+  private getPlayerId(playerName: string): String {
+    return Object.values(this.people).find(player => player.name === playerName)?.personId!;
   }
 
-  private getPlayerBirthDate(playerDetails: {[key: string]: People}, playerName: string): String {
-    return Object.entries(playerDetails).find(([key, value]) => key != null && value.name === playerName)?.[1].birthDate!;
+  private getPlayerBirthDate(playerName: string): String {
+    return Object.values(this.people).find(player => player.name === playerName)?.birthDate!;
   }
 
-  private getCompetitionName(competitionDetails: {[key: string]: Competition}, compId: String, scope: string, competitionFormat: string): String {
-    return Object.entries(competitionDetails).find(([key, value]) => key === compId && value.scope === scope && value.competitionFormat === competitionFormat)?.[1].name!;
+  private getCompetitionName(compId: string): String {
+    return this.competitions[compId]?.name;
   }
 
-  private getDomesticTeamName(teamDetails: {[key: string]: Team}, teamId: String, compId: String): String {
-    return Object.entries(teamDetails).find(([key]) => key === teamId && this.isDomestic(this.competitions, compId))?.[1].name!;
+  private getDomesticTeamName(teamId: string): String {
+    return this.teams[teamId]?.name;
   }
 
-  private getDomesticTeamCountry(teamDetails: {[key: string]: Team}, teamId: String, compId: String): String {
-    return Object.entries(teamDetails).find(([key]) => key === teamId && this.isDomestic(this.competitions, compId))?.[1].country!;
+  private getDomesticTeamCountry(teamId: string): String {
+    return this.teams[teamId]?.country;
   }
 
-  private isDomestic(competitionDetails: {[key: string]: Competition}, compId: String): boolean {
-    return this.getCompetitionScope(competitionDetails, compId) === this.DOMESTIC;
+  private isScopeDomestic(compId: string): boolean {
+    return this.competitions[compId]?.scope === this.DOMESTIC;
   }
 
-  private isLeague(competitionDetails: {[key: string]: Competition}, compId: String): boolean {
-    return this.getCompetitionFormat(competitionDetails, compId) === this.LEAGUE;
-  }
-
-  private getCompetitionScope(competitionDetails: {[key: string]: Competition}, compId: String): String {
-    return Object.entries(competitionDetails).find(([key]) => key === compId)?.[1].scope!;
-  }
-
-  private getCompetitionFormat(competitionDetails: {[key: string]: Competition}, compId: String): String {
-    return Object.entries(competitionDetails).find(([key]) => key === compId)?.[1].competitionFormat!;
+  private isCompetitionFormatLeague(compId: string): boolean {
+    return this.competitions[compId]?.competitionFormat === this.LEAGUE;
   }
   
   private getUniqueTotalCounts() {
@@ -179,7 +176,7 @@ export class AppComponent {
 
   private calculateAge(season: string, birthDateString: string): number {
     const seasonStartDate = new Date(season.slice(0, 4) + "/08/01").getTime();
-    const birthDate = new Date(birthDateString).getTime();
+    const birthDate       = new Date(birthDateString).getTime();
 
     return Math.floor((seasonStartDate - birthDate) / (365 * 24 * 60 * 60 * 1000));
   }
